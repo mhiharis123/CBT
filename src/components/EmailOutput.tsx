@@ -1,6 +1,33 @@
 import React, { useState } from 'react';
 import { OrderData } from '../types';
 
+// Utility function to format numbers with thousands separators
+const formatNumber = (value: string | undefined): string => {
+  if (!value || value === '-' || value.trim() === '') {
+    return '-';
+  }
+  
+  // Remove any existing commas and whitespace
+  const cleanValue = value.replace(/,/g, '').trim();
+  
+  // Check if it's a valid number
+  const num = parseFloat(cleanValue);
+  if (isNaN(num)) {
+    return value; // Return original value if not a number
+  }
+  
+  // Format with thousands separators
+  return num.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+};
+
+// Helper function to check if a column should be formatted as a number
+const isNumericColumn = (column: string): boolean => {
+  return ['Order.QTY', 'Order.Price', 'Done Quantity', 'Done Price'].includes(column);
+};
+
 interface EmailOutputProps {
   orderData: OrderData;
 }
@@ -48,7 +75,8 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
     
     // Add data row
     columns.forEach(column => {
-      const value = orderData[column as keyof OrderData] || '-';
+      const rawValue = orderData[column as keyof OrderData] || '-';
+      const value = isNumericColumn(column) ? formatNumber(rawValue) : rawValue;
       tableHTML += `
       <td style="padding: 8px; border: 1px solid #ddd;">${value}</td>`;
     });
