@@ -16,4 +16,19 @@
   .table-header {
     @apply px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider bg-gray-100 border-b border-gray-300;
   }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

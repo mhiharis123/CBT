@@ -7,6 +7,7 @@ interface EmailOutputProps {
 
 const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
   const [viewMode, setViewMode] = useState<'html' | 'preview'>('preview');
+  const [showNotification, setShowNotification] = useState(false);
   const formatEmailContent = () => {
     const columns = [
       'DR Code',
@@ -100,12 +101,19 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
         const clipboardItem = new ClipboardItem({ 'text/html': blob });
         await navigator.clipboard.write([clipboardItem]);
       }
-      // You could add a toast notification here if needed
+      
+      // Show notification
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
+      
     } catch (err) {
       console.error('Failed to copy text: ', err);
       // Fallback: copy as plain text
       try {
         await navigator.clipboard.writeText(emailContent);
+        // Show notification even for fallback
+        setShowNotification(true);
+        setTimeout(() => setShowNotification(false), 3000);
       } catch (fallbackErr) {
         console.error('Fallback copy also failed: ', fallbackErr);
       }
@@ -183,6 +191,16 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
           : 'This shows how your email will look. Click anywhere to select content, or use the Copy button to copy with formatting.'
         }
       </p>
+      
+      {/* Notification Toast */}
+      {showNotification && (
+        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2 animate-fade-in">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <span>Copied to Clipboard!</span>
+        </div>
+      )}
     </div>
   );
 };
