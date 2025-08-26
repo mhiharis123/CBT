@@ -29,5 +29,4 @@ Thumbs.db
 # MCP token (security)
 .mcp.json
 
-.claude
-OrderList.csv
+.claude/
