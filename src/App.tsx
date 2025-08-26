@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import OrderInput from './components/OrderInput';
-import OrderTable from './components/OrderTable';
-import DisclaimerText from './components/DisclaimerText';
+import EmailOutput from './components/EmailOutput';
 import ErrorDisplay from './components/ErrorDisplay';
 import { ParsedOrderData } from './types';
 import { parseCSVLine, formatTableData } from './utils/csvParser';
@@ -45,7 +44,7 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
           {/* Input Section */}
           <OrderInput onSubmit={handleOrderSubmit} isLoading={isLoading} />
@@ -58,16 +57,7 @@ function App() {
               )}
 
               {orderData.isValid && (
-                <>
-                  <div className="bg-white p-6 rounded-lg shadow-lg">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                      Formatted Order Details
-                    </h2>
-                    <OrderTable orderData={orderData} />
-                  </div>
-                  
-                  <DisclaimerText />
-                </>
+                <EmailOutput orderData={orderData} />
               )}
             </div>
           )}

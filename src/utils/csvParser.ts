@@ -34,10 +34,17 @@ export const parseCSVLine = (csvLine: string): ParsedOrderData => {
   // Parse CSV line (handle quoted fields)
   const fields = parseCSVFields(csvLine);
   
-  if (fields.length < 15) {
-    errors.push(`Insufficient data fields. Expected at least 15 fields, got ${fields.length}`);
+  console.log('Parsed fields:', fields); // Debug log
+  
+  if (fields.length < 10) {
+    errors.push(`Insufficient data fields. Expected at least 10 fields, got ${fields.length}`);
   }
 
+  // Map fields according to OrderList.csv structure (0-indexed)
+  // 0=No, 1=Session, 2=DR Code, 3=Client Code(Local), 4=Omnibus/GK Acc No,
+  // 5=Order Date, 6=GTD EXPIRY DATE, 7=B/S, 8=Market, 9=Instrument Code,
+  // 10=Securities/Stock Name, 11=Order.QTY, 12=Order.Price, 13=MY Order Taken By,
+  // 14=SG Order Placed By, 15=Status, 16=Remarks, 17=Done Quantity, 18=Done Price
   const orderData: OrderData = {
     'DR Code': fields[2] || '',
     'Client Code': fields[3] || '',
@@ -75,8 +82,15 @@ export const parseCSVLine = (csvLine: string): ParsedOrderData => {
   };
 };
 
-// Helper function to parse CSV fields handling quoted values
+// Helper function to parse CSV/TSV fields handling both comma and tab separators
 const parseCSVFields = (line: string): string[] => {
+  // First, try to detect if it's tab-separated by checking for multiple tabs
+  const tabCount = (line.match(/\t/g) || []).length;
+  const commaCount = (line.match(/,/g) || []).length;
+  
+  // If there are more tabs than commas, treat as tab-separated
+  const separator = tabCount > commaCount ? '\t' : ',';
+  
   const fields: string[] = [];
   let current = '';
   let inQuotes = false;
@@ -87,7 +101,7 @@ const parseCSVFields = (line: string): string[] => {
     
     if (char === '"') {
       inQuotes = !inQuotes;
-    } else if (char === ',' && !inQuotes) {
+    } else if (char === separator && !inQuotes) {
       fields.push(current.trim());
       current = '';
     } else {
@@ -97,6 +111,12 @@ const parseCSVFields = (line: string): string[] => {
   }
   
   fields.push(current.trim()); // Add last field
+  
+  // If we still don't have enough fields and there are spaces, try space separation as fallback
+  if (fields.length < 10 && line.includes('    ')) {
+    return line.split(/\s{2,}/).map(field => field.trim()).filter(field => field.length > 0);
+  }
+  
   return fields;
 };
 
