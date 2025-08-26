@@ -9,7 +9,6 @@ const OrderTable: React.FC<OrderTableProps> = ({ orderData }) => {
   const columns = [
     'DR Code',
     'Client Code',
-    '(Local)',
     'Omnibus/GK Acc No',
     'Order Date',
     'GTD EXPIRY DATE',
@@ -22,15 +21,19 @@ const OrderTable: React.FC<OrderTableProps> = ({ orderData }) => {
     'Status',
     'Done Quantity',
     'Done Price'
-  ] as const;
-
+  ];
+  
   return (
     <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-200">
       <table className="min-w-full bg-white">
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column} className="table-header">
+              <th key={column} className={
+                column === 'Done Price' || column === 'Done Quantity'
+                  ? "px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider bg-gray-100 border-b border-gray-300"
+                  : "table-header"
+              }>
                 {column}
               </th>
             ))}
@@ -41,7 +44,7 @@ const OrderTable: React.FC<OrderTableProps> = ({ orderData }) => {
             {columns.map((column) => (
               <td key={column} className="table-cell">
                 <div className="text-gray-900 font-medium">
-                  {orderData[column] || '-'}
+                  {orderData[column as keyof OrderData] || '-'}
                 </div>
               </td>
             ))}

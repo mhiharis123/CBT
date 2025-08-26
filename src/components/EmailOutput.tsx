@@ -12,7 +12,6 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
     const columns = [
       'DR Code',
       'Client Code',
-      '(Local)',
       'Omnibus/GK Acc No',
       'Order Date',
       'GTD EXPIRY DATE',
@@ -34,8 +33,11 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
     
     // Add headers
     columns.forEach(column => {
+      const headerStyle = (column === 'Done Price' || column === 'Done Quantity')
+        ? "padding: 8px; text-align: left; border: 1px solid #ddd; color: #1d4ed8;"
+        : "padding: 8px; text-align: left; border: 1px solid #ddd;";
       tableHTML += `
-      <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">${column}</th>`;
+      <th style="${headerStyle}">${column}</th>`;
     });
     
     tableHTML += `
@@ -59,7 +61,7 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
 <br><br>`;
     
     // Add disclaimer text
-    const disclaimerHTML = `<div style="background-color: #fff8dc; border: 2px solid #daa520; padding: 15px; border-radius: 8px; font-family: Arial, sans-serif;">
+    const disclaimerHTML = `<div style="background-color: #fef2f2; border: 2px solid #dc2626; padding: 15px; border-radius: 8px; font-family: Arial, sans-serif;">
   <p style="margin-bottom: 12px;">
     <strong>Kindly check for any discrepancy in this trade confirmation against the order and phone confirmation. 
     It is a MUST to revert to us by the end of the trading day.</strong>
@@ -74,7 +76,7 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
     Thank you for your kind understanding.
   </p>
   
-  <hr style="border: 1px solid #daa520; margin: 15px 0;">
+  <hr style="border: 1px solid #dc2626; margin: 15px 0;">
   
   <h4 style="color: #cc0000; margin-bottom: 8px;">IMPORTANT NOTE:</h4>
   <p style="font-size: 14px; margin: 0;">

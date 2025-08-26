@@ -1,7 +1,6 @@
 export interface OrderData {
   'DR Code': string;
   'Client Code': string;
-  '(Local)': string;
   'Omnibus/GK Acc No': string;
   'Order Date': string;
   'GTD EXPIRY DATE': string;

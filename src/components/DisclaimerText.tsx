@@ -2,7 +2,7 @@ import React from 'react';
 
 const DisclaimerText: React.FC = () => {
   return (
-    <div className="mt-8 p-6 bg-amber-50 border border-amber-200 rounded-lg">
+    <div className="mt-8 p-6 bg-red-50 border border-red-200 rounded-lg">
       <div className="prose prose-sm max-w-none text-gray-800">
         <p className="mb-4">
           Kindly check for any discrepancy in this trade confirmation against the order and phone confirmation. 
@@ -16,7 +16,7 @@ const DisclaimerText: React.FC = () => {
           Thank you for your kind understanding.
         </p>
         
-        <div className="border-t border-amber-300 pt-4">
+        <div className="border-t border-red-300 pt-4">
           <h4 className="font-semibold text-red-700 mb-2">IMPORTANT NOTE:</h4>
           <p className="text-sm">
             All the Offline Cross Border Trade settlement DEFAULT in MYR, DRs/Remisiers <strong>MUST NOTIFY</strong> CGS I'ntl SEC MY OPS-CROSS BORDER SETTLEMENT{' '}

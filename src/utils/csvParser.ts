@@ -1,7 +1,7 @@
 import { OrderData, ParsedOrderData } from '../types';
 
 // Column mapping based on the CSV structure from OrderList.csv
-// Field indices: 0=No, 1=Session, 2=DR Code, 3=Client Code(Local), 4=Omnibus/GK Acc No,
+// Field indices: 0=No, 1=Session, 2=DR Code, 3=Client Code, 4=Omnibus/GK Acc No,
 // 5=Order Date, 6=GTD EXPIRY DATE, 7=B/S, 8=Market, 9=Instrument Code,
 // 10=Securities/Stock Name, 11=Order.QTY, 12=Order.Price, 13=MY Order Taken By,
 // 14=SG Order Placed By, 15=Status, 16=Remarks, 17=Done Quantity, 18=Done Price
@@ -13,7 +13,6 @@ export const parseCSVLine = (csvLine: string): ParsedOrderData => {
     return {
       'DR Code': '',
       'Client Code': '',
-      '(Local)': '',
       'Omnibus/GK Acc No': '',
       'Order Date': '',
       'GTD EXPIRY DATE': '',
@@ -41,14 +40,13 @@ export const parseCSVLine = (csvLine: string): ParsedOrderData => {
   }
 
   // Map fields according to OrderList.csv structure (0-indexed)
-  // 0=No, 1=Session, 2=DR Code, 3=Client Code(Local), 4=Omnibus/GK Acc No,
+  // 0=No, 1=Session, 2=DR Code, 3=Client Code, 4=Omnibus/GK Acc No,
   // 5=Order Date, 6=GTD EXPIRY DATE, 7=B/S, 8=Market, 9=Instrument Code,
   // 10=Securities/Stock Name, 11=Order.QTY, 12=Order.Price, 13=MY Order Taken By,
   // 14=SG Order Placed By, 15=Status, 16=Remarks, 17=Done Quantity, 18=Done Price
   const orderData: OrderData = {
     'DR Code': fields[2] || '',
     'Client Code': fields[3] || '',
-    '(Local)': fields[3] || '', // Same as Client Code based on CSV structure
     'Omnibus/GK Acc No': fields[4] || '',
     'Order Date': fields[5] || '',
     'GTD EXPIRY DATE': fields[6] || '',
