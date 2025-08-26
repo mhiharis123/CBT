@@ -2,7 +2,7 @@ import React from 'react';
 import { OrderData } from '../types';
 
 // Utility function to format numbers with thousands separators
-const formatNumber = (value: string | undefined): string => {
+const formatNumber = (value: string | undefined, columnName: string): string => {
   if (!value || value === '-' || value.trim() === '') {
     return '-';
   }
@@ -16,16 +16,30 @@ const formatNumber = (value: string | undefined): string => {
     return value; // Return original value if not a number
   }
   
-  // Format with thousands separators
-  return num.toLocaleString('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2
-  });
+  // Format based on column type
+  if (isPriceColumn(columnName)) {
+    // For price columns: up to 5 decimal places, no forced trailing zeros
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 5
+    });
+  } else {
+    // For quantity columns: 0-2 decimal places
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    });
+  }
 };
 
 // Helper function to check if a column should be formatted as a number
 const isNumericColumn = (column: string): boolean => {
   return ['Order.QTY', 'Order.Price', 'Done Quantity', 'Done Price'].includes(column);
+};
+
+// Helper function to check if a column is a price column (needs up to 5 decimal places)
+const isPriceColumn = (column: string): boolean => {
+  return ['Order.Price', 'Done Price'].includes(column);
 };
 
 interface OrderTableProps {
@@ -76,7 +90,7 @@ const OrderTable: React.FC<OrderTableProps> = ({ orderData }) => {
               <td key={column} className="table-cell">
                 <div className="text-gray-900 font-medium">
                   {isNumericColumn(column) 
-                    ? formatNumber(orderData[column as keyof OrderData]) 
+                    ? formatNumber(orderData[column as keyof OrderData], column) 
                     : (orderData[column as keyof OrderData] || '-')
                   }
                 </div>

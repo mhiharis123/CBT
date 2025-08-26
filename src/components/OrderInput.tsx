@@ -37,7 +37,7 @@ const OrderInput: React.FC<OrderInputProps> = ({ onSubmit, isLoading }) => {
             id="order-input"
             rows={4}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-vertical"
-            placeholder="Example: 1,Day,CSY,255048,68380,11/08/2025,29/08/2025,SELL,LSE,PALMP.L,PANTHER METALS,4000,100P,Haris,Joseph,,,,"
+            placeholder="Example: 4    Day    BG7    19076    68380    25/08/2025    29/08/2025    SELL    ASX    ALK.AX    Alkane Resources Ltd    2000    0.985    Aizat    Sean    Done        22,000    0.985"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             disabled={isLoading}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { OrderData } from '../types';
 
 // Utility function to format numbers with thousands separators
-const formatNumber = (value: string | undefined): string => {
+const formatNumber = (value: string | undefined, columnName: string): string => {
   if (!value || value === '-' || value.trim() === '') {
     return '-';
   }
@@ -16,16 +16,30 @@ const formatNumber = (value: string | undefined): string => {
     return value; // Return original value if not a number
   }
   
-  // Format with thousands separators
-  return num.toLocaleString('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2
-  });
+  // Format based on column type
+  if (isPriceColumn(columnName)) {
+    // For price columns: up to 5 decimal places, no forced trailing zeros
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 5
+    });
+  } else {
+    // For quantity columns: 0-2 decimal places
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    });
+  }
 };
 
 // Helper function to check if a column should be formatted as a number
 const isNumericColumn = (column: string): boolean => {
   return ['Order.QTY', 'Order.Price', 'Done Quantity', 'Done Price'].includes(column);
+};
+
+// Helper function to check if a column is a price column (needs up to 5 decimal places)
+const isPriceColumn = (column: string): boolean => {
+  return ['Order.Price', 'Done Price'].includes(column);
 };
 
 interface EmailOutputProps {
@@ -76,7 +90,7 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
     // Add data row
     columns.forEach(column => {
       const rawValue = orderData[column as keyof OrderData] || '-';
-      const value = isNumericColumn(column) ? formatNumber(rawValue) : rawValue;
+      const value = isNumericColumn(column) ? formatNumber(rawValue, column) : rawValue;
       tableHTML += `
       <td style="padding: 8px; border: 1px solid #ddd;">${value}</td>`;
     });

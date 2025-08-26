@@ -72,7 +72,7 @@ function App() {
                 Copy a row from your CSV file in this format:
               </p>
               <code className="block bg-blue-100 p-3 rounded text-sm text-blue-900 overflow-x-auto">
-                1,Day,CSY,255048,68380,11/08/2025,29/08/2025,SELL,LSE,PALMP.L,PANTHER METALS,4000,100P,Haris,Joseph,,,
+                4    Day    BG7    19076    68380    25/08/2025    29/08/2025    SELL    ASX    ALK.AX    Alkane Resources Ltd    2000    0.985    Aizat    Sean    Done        22,000    0.985
               </code>
               <p className="text-blue-700 text-sm mt-2">
                 The system will automatically extract the required columns and format them into a professional table.
