@@ -34,7 +34,7 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
     // Add headers
     columns.forEach(column => {
       const headerStyle = (column === 'Done Price' || column === 'Done Quantity')
-        ? "padding: 8px; text-align: left; border: 1px solid #ddd; color: #1d4ed8;"
+        ? "padding: 8px; text-align: left; border: 1px solid #ddd; background-color: #F4AB6A; color: black;"
         : "padding: 8px; text-align: left; border: 1px solid #ddd;";
       tableHTML += `
       <th style="${headerStyle}">${column}</th>`;

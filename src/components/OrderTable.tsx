@@ -31,8 +31,12 @@ const OrderTable: React.FC<OrderTableProps> = ({ orderData }) => {
             {columns.map((column) => (
               <th key={column} className={
                 column === 'Done Price' || column === 'Done Quantity'
-                  ? "px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider bg-gray-100 border-b border-gray-300"
+                  ? "px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-gray-100 border-b border-gray-300"
                   : "table-header"
+              } style={
+                column === 'Done Price' || column === 'Done Quantity'
+                  ? { backgroundColor: '#F4AB6A', color: 'black' }
+                  : undefined
               }>
                 {column}
               </th>
