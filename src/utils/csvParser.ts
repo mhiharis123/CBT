@@ -1,4 +1,4 @@
-import { OrderData, ParsedOrderData } from '../types';
+import { OrderData, ParsedOrderData, MultipleOrdersData } from '../types';
 
 // Column mapping based on the CSV structure from OrderList.csv
 // Field indices: 0=No, 1=Session, 2=DR Code, 3=Client Code, 4=Omnibus/GK Acc No,
@@ -116,6 +116,42 @@ const parseCSVFields = (line: string): string[] => {
   }
   
   return fields;
+};
+
+// New function to parse multiple CSV lines
+export const parseMultipleCSVLines = (csvData: string): MultipleOrdersData => {
+  const lines = csvData.trim().split('\n').filter(line => line.trim().length > 0);
+  const orders: OrderData[] = [];
+  const errors: string[] = [];
+  
+  if (lines.length === 0) {
+    return {
+      orders: [],
+      isValid: false,
+      errors: ['No input provided']
+    };
+  }
+
+  lines.forEach((line, index) => {
+    const parsedOrder = parseCSVLine(line);
+    
+    if (parsedOrder.isValid) {
+      const formattedOrder = formatTableData(parsedOrder);
+      orders.push(formattedOrder);
+    } else {
+      if (parsedOrder.errors) {
+        parsedOrder.errors.forEach(error => {
+          errors.push(`Line ${index + 1}: ${error}`);
+        });
+      }
+    }
+  });
+
+  return {
+    orders,
+    isValid: errors.length === 0 && orders.length > 0,
+    errors: errors.length > 0 ? errors : undefined
+  };
 };
 
 export const formatTableData = (orderData: OrderData): OrderData => {

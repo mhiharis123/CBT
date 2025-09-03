@@ -25,7 +25,7 @@ const OrderInput: React.FC<OrderInputProps> = ({ onSubmit, isLoading }) => {
         Paste Order Details
       </h2>
       <p className="text-sm text-gray-600 mb-4">
-        Copy and paste a single row of order details from your CSV file to format it as a clean table.
+        Copy and paste one or more rows of order details from your CSV file. Multiple rows will be appended to the existing table.
       </p>
       
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -37,7 +37,9 @@ const OrderInput: React.FC<OrderInputProps> = ({ onSubmit, isLoading }) => {
             id="order-input"
             rows={4}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-vertical"
-            placeholder="Example: 4    Day    BG7    19076    68380    25/08/2025    29/08/2025    SELL    ASX    ALK.AX    Alkane Resources Ltd    2000    0.985    Aizat    Sean    Done        22,000    0.985"
+            placeholder="Example (multiple lines supported):
+15    Day    H25    139188    68380    29/08/2025    -    SELL    HKEX    8210.HK    DLC ASIA LIMITED    240.000    0.052    Dinie    Joseph    Partial Done    220.000    0.052091
+14    Day    G07    104833    68380    29/08/2025    -    BUY    ASX    HCT.AX    HOLISTA COLLTECH LIMITED    10.000    0.110    Dinie    Jonathan    Done    10.000    0.110"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             disabled={isLoading}
@@ -50,7 +52,7 @@ const OrderInput: React.FC<OrderInputProps> = ({ onSubmit, isLoading }) => {
             disabled={!inputValue.trim() || isLoading}
             className="px-6 py-2 bg-primary-600 text-white font-medium rounded-md shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isLoading ? 'Processing...' : 'Format Order'}
+            {isLoading ? 'Processing...' : 'Add Orders'}
           </button>
           
           <button

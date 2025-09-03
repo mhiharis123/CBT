@@ -19,3 +19,9 @@ export interface ParsedOrderData extends OrderData {
   isValid: boolean;
   errors?: string[];
 }
+
+export interface MultipleOrdersData {
+  orders: OrderData[];
+  isValid: boolean;
+  errors?: string[];
+}

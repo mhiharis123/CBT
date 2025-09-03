@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import OrderInput from './components/OrderInput';
 import EmailOutput from './components/EmailOutput';
 import ErrorDisplay from './components/ErrorDisplay';
-import { ParsedOrderData } from './types';
-import { parseCSVLine, formatTableData } from './utils/csvParser';
+import { OrderData } from './types';
+import { parseMultipleCSVLines } from './utils/csvParser';
 
 function App() {
-  const [orderData, setOrderData] = useState<ParsedOrderData | null>(null);
+  const [orders, setOrders] = useState<OrderData[]>([]);
+  const [errors, setErrors] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleOrderSubmit = (csvData: string) => {
@@ -14,17 +15,23 @@ function App() {
     
     // Simulate processing delay for better UX
     setTimeout(() => {
-      const parsedData = parseCSVLine(csvData);
+      const parsedData = parseMultipleCSVLines(csvData);
       
       if (parsedData.isValid) {
-        const formattedData = formatTableData(parsedData);
-        setOrderData({ ...formattedData, isValid: true });
+        // Append new orders to existing ones
+        setOrders(prevOrders => [...prevOrders, ...parsedData.orders]);
+        setErrors(null);
       } else {
-        setOrderData(parsedData);
+        setErrors(parsedData.errors || ['Unknown error occurred']);
       }
       
       setIsLoading(false);
     }, 300);
+  };
+
+  const handleClearOrders = () => {
+    setOrders([]);
+    setErrors(null);
   };
 
   return (
@@ -50,32 +57,45 @@ function App() {
           <OrderInput onSubmit={handleOrderSubmit} isLoading={isLoading} />
 
           {/* Results Section */}
-          {orderData && (
+          {(orders.length > 0 || errors) && (
             <div className="space-y-6">
-              {!orderData.isValid && orderData.errors && (
-                <ErrorDisplay errors={orderData.errors} />
+              {errors && (
+                <ErrorDisplay errors={errors} />
               )}
 
-              {orderData.isValid && (
-                <EmailOutput orderData={orderData} />
+              {orders.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm text-gray-600">
+                      {orders.length} order{orders.length > 1 ? 's' : ''} ready to copy
+                    </p>
+                    <button
+                      onClick={handleClearOrders}
+                      className="px-4 py-2 text-red-600 border border-red-300 rounded-md hover:bg-red-50 transition-colors"
+                    >
+                      Clear All Orders
+                    </button>
+                  </div>
+                  <EmailOutput orders={orders} />
+                </div>
               )}
             </div>
           )}
 
           {/* Sample Data Helper */}
-          {!orderData && (
+          {orders.length === 0 && !errors && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
               <h3 className="text-lg font-medium text-blue-900 mb-3">
                 Sample Format
               </h3>
               <p className="text-blue-800 mb-3">
-                Copy a row from your CSV file in this format:
+                Copy one or more rows from your CSV file in this format:
               </p>
               <code className="block bg-blue-100 p-3 rounded text-sm text-blue-900 overflow-x-auto">
                 4    Day    BG7    19076    68380    25/08/2025    29/08/2025    SELL    ASX    ALK.AX    Alkane Resources Ltd    2000    0.985    Aizat    Sean    Done        22,000    0.985
               </code>
               <p className="text-blue-700 text-sm mt-2">
-                The system will automatically extract the required columns and format them into a professional table.
+                The system will automatically extract the required columns and format them into a professional table. Multiple rows will be appended to the existing table.
               </p>
             </div>
           )}

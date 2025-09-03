@@ -43,10 +43,10 @@ const isPriceColumn = (column: string): boolean => {
 };
 
 interface EmailOutputProps {
-  orderData: OrderData;
+  orders: OrderData[];
 }
 
-const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
+const EmailOutput: React.FC<EmailOutputProps> = ({ orders }) => {
   const [viewMode, setViewMode] = useState<'html' | 'preview'>('preview');
   const [showNotification, setShowNotification] = useState(false);
   const formatEmailContent = () => {
@@ -84,19 +84,25 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orderData }) => {
     tableHTML += `
     </tr>
   </thead>
-  <tbody>
-    <tr>`;
+  <tbody>`;
     
-    // Add data row
-    columns.forEach(column => {
-      const rawValue = orderData[column as keyof OrderData] || '-';
-      const value = isNumericColumn(column) ? formatNumber(rawValue, column) : rawValue;
+    // Add data rows for all orders
+    orders.forEach(orderData => {
       tableHTML += `
+    <tr>`;
+      
+      columns.forEach(column => {
+        const rawValue = orderData[column as keyof OrderData] || '-';
+        const value = isNumericColumn(column) ? formatNumber(rawValue, column) : rawValue;
+        tableHTML += `
       <td style="padding: 8px; border: 1px solid #ddd;">${value}</td>`;
+      });
+      
+      tableHTML += `
+    </tr>`;
     });
     
     tableHTML += `
-    </tr>
   </tbody>
 </table>
 
