@@ -4,11 +4,12 @@ import { OrderData, ParsedOrderData, MultipleOrdersData } from '../types';
 // Field indices: 0=No, 1=Session, 2=DR Code, 3=Client Code, 4=Omnibus/GK Acc No,
 // 5=Order Date, 6=GTD EXPIRY DATE, 7=B/S, 8=Market, 9=Instrument Code,
 // 10=Securities/Stock Name, 11=Order.QTY, 12=Order.Price, 13=MY Order Taken By,
-// 14=SG Order Placed By, 15=Status, 16=Remarks, 17=Done Quantity, 18=Done Price
+// 14=SG Order Placed By, 15=Status, 16=Remarks, 17=Done Quantity, 18=Done Price,
+// 19=Settlement Currency
 
 export const parseCSVLine = (csvLine: string): ParsedOrderData => {
   const errors: string[] = [];
-  
+
   if (!csvLine.trim()) {
     return {
       'DR Code': '',
@@ -25,6 +26,7 @@ export const parseCSVLine = (csvLine: string): ParsedOrderData => {
       'Status': '',
       'Done Quantity': '',
       'Done Price': '',
+      'Settlement Currency': '',
       isValid: false,
       errors: ['Empty input provided']
     };
@@ -32,9 +34,9 @@ export const parseCSVLine = (csvLine: string): ParsedOrderData => {
 
   // Parse CSV line (handle quoted fields)
   const fields = parseCSVFields(csvLine);
-  
+
   console.log('Parsed fields:', fields); // Debug log
-  
+
   if (fields.length < 10) {
     errors.push(`Insufficient data fields. Expected at least 10 fields, got ${fields.length}`);
   }
@@ -43,7 +45,8 @@ export const parseCSVLine = (csvLine: string): ParsedOrderData => {
   // 0=No, 1=Session, 2=DR Code, 3=Client Code, 4=Omnibus/GK Acc No,
   // 5=Order Date, 6=GTD EXPIRY DATE, 7=B/S, 8=Market, 9=Instrument Code,
   // 10=Securities/Stock Name, 11=Order.QTY, 12=Order.Price, 13=MY Order Taken By,
-  // 14=SG Order Placed By, 15=Status, 16=Remarks, 17=Done Quantity, 18=Done Price
+  // 14=SG Order Placed By, 15=Status, 16=Remarks, 17=Done Quantity, 18=Done Price,
+  // 19=Settlement Currency
   const orderData: OrderData = {
     'DR Code': fields[2] || '',
     'Client Code': fields[3] || '',
@@ -58,12 +61,13 @@ export const parseCSVLine = (csvLine: string): ParsedOrderData => {
     'Order.Price': fields[12] || '',
     'Status': fields[15] || '',
     'Done Quantity': fields[17] || '',
-    'Done Price': fields[18] || ''
+    'Done Price': fields[18] || '',
+    'Settlement Currency': fields[19] || ''
   };
 
   // Validate required fields
   const requiredFields: (keyof OrderData)[] = [
-    'DR Code', 'Client Code', 'Order Date', 'B/S', 'Market', 
+    'DR Code', 'Client Code', 'Order Date', 'B/S', 'Market',
     'Instrument Code', 'Securities/Stock Name', 'Order.QTY'
   ];
 
@@ -85,10 +89,10 @@ const parseCSVFields = (line: string): string[] => {
   // First, try to detect if it's tab-separated by checking for multiple tabs
   const tabCount = (line.match(/\t/g) || []).length;
   const commaCount = (line.match(/,/g) || []).length;
-  
+
   // If there are more tabs than commas, treat as tab-separated
   const separator = tabCount > commaCount ? '\t' : ',';
-  
+
   const fields: string[] = [];
   let current = '';
   let inQuotes = false;
@@ -96,7 +100,7 @@ const parseCSVFields = (line: string): string[] => {
 
   while (i < line.length) {
     const char = line[i];
-    
+
     if (char === '"') {
       inQuotes = !inQuotes;
     } else if (char === separator && !inQuotes) {
@@ -107,14 +111,14 @@ const parseCSVFields = (line: string): string[] => {
     }
     i++;
   }
-  
+
   fields.push(current.trim()); // Add last field
-  
+
   // If we still don't have enough fields and there are spaces, try space separation as fallback
   if (fields.length < 10 && line.includes('    ')) {
     return line.split(/\s{2,}/).map(field => field.trim()).filter(field => field.length > 0);
   }
-  
+
   return fields;
 };
 
@@ -123,7 +127,7 @@ export const parseMultipleCSVLines = (csvData: string): MultipleOrdersData => {
   const lines = csvData.trim().split('\n').filter(line => line.trim().length > 0);
   const orders: OrderData[] = [];
   const errors: string[] = [];
-  
+
   if (lines.length === 0) {
     return {
       orders: [],
@@ -134,7 +138,7 @@ export const parseMultipleCSVLines = (csvData: string): MultipleOrdersData => {
 
   lines.forEach((line, index) => {
     const parsedOrder = parseCSVLine(line);
-    
+
     if (parsedOrder.isValid) {
       const formattedOrder = formatTableData(parsedOrder);
       orders.push(formattedOrder);
@@ -160,6 +164,7 @@ export const formatTableData = (orderData: OrderData): OrderData => {
     'Order.QTY': orderData['Order.QTY'].replace(/[",]/g, '').trim(),
     'Done Quantity': orderData['Done Quantity'].replace(/[",]/g, '').trim(),
     'Order.Price': orderData['Order.Price'].replace(/[p]/g, '').trim(),
-    'Done Price': orderData['Done Price'].replace(/[p]/g, '').trim()
+    'Done Price': orderData['Done Price'].replace(/[p]/g, '').trim(),
+    'Settlement Currency': orderData['Settlement Currency'].trim()
   };
 };

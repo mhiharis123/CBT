@@ -13,6 +13,7 @@ export interface OrderData {
   'Status': string;
   'Done Quantity': string;
   'Done Price': string;
+  'Settlement Currency': string;
 }
 
 export interface ParsedOrderData extends OrderData {

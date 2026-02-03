@@ -4,7 +4,7 @@ FROM : CDTKL,,,,,,,,,,,,,,,,,,
 Hunting Line: 0065-6232 5888",,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,
 No,Session,DR Code,"Client Code
-(Local)",Omnibus/GK Acc No,Order Date,GTD EXPIRY DATE,B/S,Market,Instrument Code,Securities/Stock Name,Order.QTY,Order.Price,MY Order Taken By,SG Order Placed By,Status,Remarks,Done Quantity,Done Price
+(Local)",Omnibus/GK Acc No,Order Date,GTD EXPIRY DATE,B/S,Market,Instrument Code,Securities/Stock Name,Order.QTY,Order.Price,MY Order Taken By,SG Order Placed By,Status,Remarks,Done Quantity,Done Price,Settlement Currency
 1,Day,CSY,255048,68380,11/08/2025,29/08/2025,SELL,LSE,PALMP.L,PANTHER METALS," 4,000 ",100P,Haris,Joseph,,,,
 2,Day,BG7,19076,68380,25/08/2025,29/08/2025,BUY,ASX,ALK.AX,Alkane Resources Ltd,"20,000",0.79,Aizat,Sean,,,,
 3,Day,BG7,19076,68380,25/08/2025,29/08/2025,BUY,ASX,ALK.AX,Alkane Resources Ltd,"16,000",0.85,Aizat,Sean,,,,

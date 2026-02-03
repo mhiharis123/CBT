@@ -6,16 +6,16 @@ const formatNumber = (value: string | undefined, columnName: string): string => 
   if (!value || value === '-' || value.trim() === '') {
     return '-';
   }
-  
+
   // Remove any existing commas and whitespace
   const cleanValue = value.replace(/,/g, '').trim();
-  
+
   // Check if it's a valid number
   const num = parseFloat(cleanValue);
   if (isNaN(num)) {
     return value; // Return original value if not a number
   }
-  
+
   // Format based on column type
   if (isPriceColumn(columnName)) {
     // For price columns: up to 5 decimal places, no forced trailing zeros
@@ -64,50 +64,51 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orders }) => {
       'Order.Price',
       'Status',
       'Done Quantity',
-      'Done Price'
+      'Done Price',
+      'Settlement Currency'
     ];
 
     // Create HTML table
     let tableHTML = `<table border="1" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
   <thead>
     <tr style="background-color: #f2f2f2;">`;
-    
+
     // Add headers
     columns.forEach(column => {
-      const headerStyle = (column === 'Done Price' || column === 'Done Quantity')
+      const headerStyle = (column === 'Done Price' || column === 'Done Quantity' || column === 'Settlement Currency')
         ? "padding: 8px; text-align: left; border: 1px solid #ddd; background-color: #F4AB6A; color: black;"
         : "padding: 8px; text-align: left; border: 1px solid #ddd;";
       tableHTML += `
       <th style="${headerStyle}">${column}</th>`;
     });
-    
+
     tableHTML += `
     </tr>
   </thead>
   <tbody>`;
-    
+
     // Add data rows for all orders
     orders.forEach(orderData => {
       tableHTML += `
     <tr>`;
-      
+
       columns.forEach(column => {
         const rawValue = orderData[column as keyof OrderData] || '-';
         const value = isNumericColumn(column) ? formatNumber(rawValue, column) : rawValue;
         tableHTML += `
       <td style="padding: 8px; border: 1px solid #ddd;">${value}</td>`;
       });
-      
+
       tableHTML += `
     </tr>`;
     });
-    
+
     tableHTML += `
   </tbody>
 </table>
 
 <br><br>`;
-    
+
     // Add disclaimer text
     const disclaimerHTML = `<div style="background-color: #fef2f2; border: 2px solid #dc2626; padding: 15px; border-radius: 8px; font-family: Arial, sans-serif;">
   <p style="margin-bottom: 12px;">
@@ -151,11 +152,11 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orders }) => {
         const clipboardItem = new ClipboardItem({ 'text/html': blob });
         await navigator.clipboard.write([clipboardItem]);
       }
-      
+
       // Show notification
       setShowNotification(true);
       setTimeout(() => setShowNotification(false), 3000);
-      
+
     } catch (err) {
       console.error('Failed to copy text: ', err);
       // Fallback: copy as plain text
@@ -180,21 +181,19 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orders }) => {
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
               onClick={() => setViewMode('preview')}
-              className={`px-3 py-1 rounded text-sm transition-colors ${
-                viewMode === 'preview'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:text-gray-800'
-              }`}
+              className={`px-3 py-1 rounded text-sm transition-colors ${viewMode === 'preview'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-600 hover:text-gray-800'
+                }`}
             >
               Preview
             </button>
             <button
               onClick={() => setViewMode('html')}
-              className={`px-3 py-1 rounded text-sm transition-colors ${
-                viewMode === 'html'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:text-gray-800'
-              }`}
+              className={`px-3 py-1 rounded text-sm transition-colors ${viewMode === 'html'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-600 hover:text-gray-800'
+                }`}
             >
               HTML Code
             </button>
@@ -207,7 +206,7 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orders }) => {
           </button>
         </div>
       </div>
-      
+
       {viewMode === 'html' ? (
         <textarea
           value={emailContent}
@@ -216,7 +215,7 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orders }) => {
           placeholder="Your formatted email content will appear here..."
         />
       ) : (
-        <div 
+        <div
           className="w-full h-[600px] p-4 border border-gray-300 rounded-md bg-white overflow-auto cursor-text select-text"
           style={{ userSelect: 'text' }}
           onClick={() => {
@@ -227,21 +226,21 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orders }) => {
             selection?.addRange(range);
           }}
         >
-          <div 
-            className="preview-content" 
-            dangerouslySetInnerHTML={{ __html: emailContent }} 
+          <div
+            className="preview-content"
+            dangerouslySetInnerHTML={{ __html: emailContent }}
             style={{ userSelect: 'text' }}
           />
         </div>
       )}
-      
+
       <p className="mt-2 text-sm text-gray-600">
-        {viewMode === 'html' 
+        {viewMode === 'html'
           ? 'This is the HTML code. Use the Copy button above or select and copy the text manually.'
           : 'This shows how your email will look. Click anywhere to select content, or use the Copy button to copy with formatting.'
         }
       </p>
-      
+
       {/* Notification Toast */}
       {showNotification && (
         <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2 animate-fade-in">

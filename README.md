@@ -31,6 +31,7 @@ The application displays the following columns in order:
 - Status
 - Done Quantity (formatted with thousands separators, highlighted in orange)
 - Done Price (formatted with thousands separators, up to 5 decimal places, highlighted in orange)
+- Settlement Currency (highlighted in orange)
 
 ## Usage
 
@@ -43,7 +44,7 @@ The application displays the following columns in order:
 
 2. **Input Format**: Copy one or more rows from your CSV file. Each row should be in this format:
    ```
-   4    Day    BG7    19076    68380    25/08/2025    29/08/2025    SELL    ASX    ALK.AX    Alkane Resources Ltd    2000    0.985    Aizat    Sean    Done        22,000    0.985
+   7	Day	T92	253983	68380	3-Feb-2026		BUY	ASX	WC8.AX	WILDCAT RESOURCES	191,600	AUD 0.385	Dinie	Kok Hian	Done	Revise from AUD 0.375 to AUD 0.385	191,600	AUD 0.384972	MYR
    ```
 
 3. **Processing**: 
@@ -61,7 +62,7 @@ The application displays the following columns in order:
 
 ### Email Output Capabilities
 - **HTML Table Generation**: Creates properly formatted HTML tables suitable for email clients
-- **Styled Headers**: Done Price/Qty columns highlighted with orange background (#F4AB6A)
+- **Styled Headers**: Done Price/Qty and Settlement Currency columns highlighted with orange background (#F4AB6A)
 - **Formatted Numbers**: Automatic formatting with thousands separators
 - **Built-in Disclaimer**: Compliance text with settlement instructions and contact details
 
