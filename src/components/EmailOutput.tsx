@@ -128,12 +128,11 @@ const EmailOutput: React.FC<EmailOutputProps> = ({ orders }) => {
   <hr style="border: 1px solid #dc2626; margin: 15px 0;">
   
   <h4 style="color: #cc0000; margin-bottom: 8px;">IMPORTANT NOTE:</h4>
-  <p style="font-size: 14px; margin: 0;">
-    All the Offline Cross Border Trade settlement DEFAULT in MYR, DRs/Remisiers <strong>MUST NOTIFY</strong> 
-    CGS I'ntl SEC MY OPS-CROSS BORDER SETTLEMENT 
-    <a href="mailto:opssett.my@cgsi.com" style="color: #0066cc; text-decoration: underline;">(opssett.my@cgsi.com)</a> 
-    by <strong>T+1 BEFORE 11:30AM</strong>, if your client wishes to maintain the settlement in traded currency.
-  </p>
+  <div style="font-size: 14px;">
+    <p style="margin: 0 0 4px 0;">1) All Offline Cross Border Trade settlement will be in MYR by default.</p>
+    <p style="margin: 0 0 4px 0;">2) DR must ensure the settlement currency is correctly indicated based on client’s request at the point of order placement.</p>
+    <p style="margin: 0;">3) NO amendments on settlement currency are allowed once the contract has been booked out.</p>
+  </div>
 </div>`;
 
     return tableHTML + disclaimerHTML;
